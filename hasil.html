@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Ujian - SDN Jasinga 02</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .result-container {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: zoomIn 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .result-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(to right, #4CAF50, #8BC34A, #FFC107, #FF9800, #FF5722);
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .trophy {
+            font-size: 6rem;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(5deg); }
+            75% { transform: translateY(-15px) rotate(-5deg); }
+        }
+        
+        h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .student-info {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        
+        .score-circle {
+            width: 220px;
+            height: 220px;
+            margin: 30px auto;
+            position: relative;
+        }
+        
+        .score-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(#4CAF50 0deg, #4CAF50 calc(var(--percent) * 3.6deg), #e0e0e0 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .score-inner {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .score-number {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #4CAF50;
+            line-height: 1;
+        }
+        
+        .score-total {
+            font-size: 1.5rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .score-label {
+            font-size: 1.2rem;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .result-card {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        
+        .result-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .result-card .value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .predikat {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 20px 0;
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .analysis-box {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: left;
+            border-left: 5px solid #667eea;
+        }
+        
+        .analysis-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .analysis-box ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        
+        .analysis-box li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 16px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            min-width: 220px;
+            justify-content: center;
+        }
+        
+        .btn-review {
+            background: linear-gradient(to right, #2196F3, #1976D2);
+            color: white;
+        }
+        
+        .btn-home {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+        }
+        
+        .btn-print {
+            background: linear-gradient(to right, #FF9800, #F57C00);
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+        }
+        
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .result-container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .trophy {
+                font-size: 4rem;
+            }
+            
+            .score-circle {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .score-inner {
+                width: 130px;
+                height: 130px;
+            }
+            
+            .score-number {
+                font-size: 2.8rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Confetti -->
+    <div class="confetti" id="confetti"></div>
+    
+    <div class="result-container">
+        <div class="trophy">🏆</div>
+        
+        <h1>SELAMAT!</h1>
+        <div class="student-info" id="student-info">
+            <!-- Data siswa diisi JS -->
+        </div>
+        
+        <div class="score-circle">
+            <div class="score-ring" id="score-ring">
+                <div class="score-inner">
+                    <div class="score-number" id="score-number">0</div>
+                    <div class="score-total" id="score-total">/ 0</div>
+                    <div class="score-label">NILAI</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="predikat" id="predikat">
+            <!-- Predikat diisi JS -->
+        </div>
+        
+        <div class="result-grid">
+            <div class="result-card">
+                <h3>📊 PERSENTASE</h3>
+                <div class="value" id="persentase">0%</div>
+            </div>
+            <div class="result-card">
+                <h3>✅ SOAL BENAR</h3>
+                <div class="value" id="soal-benar">0</div>
+            </div>
+            <div class="result-card">
+                <h3>⏰ WAKTU SELESAI</h3>
+                <div class="value" id="waktu-selesai">00:00</div>
+            </div>
+            <div class="result-card">
+                <h3>📝 STATUS</h3>
+                <div class="value" id="status-ujian">SELESAI</div>
+            </div>
+        </div>
+        
+        <div class="analysis-box">
+            <h3>📈 ANALISIS HASIL</h3>
+            <ul id="analisis-list">
+                <!-- Analisis diisi JS -->
+            </ul>
+        </div>
+        
+        <div class="buttons">
+            <button class="btn btn-review" onclick="reviewJawaban()">
+                🔍 LIHAT JAWABAN
+            </button>
+            <button class="btn btn-print" onclick="printHasil()">
+                🖨️ CETAK HASIL
+            </button>
+            <button class="btn btn-home" onclick="kembaliHome()">
+                🏠 KEMBALI KE HOME
+            </button>
+        </div>
+        
+        <div class="footer">
+            <p>⏰ Waktu pengumpulan: <span id="waktu-pengumpulan"></span></p>
+            <p>© 2024 SDN Jasinga 02 - Sistem Ujian Online IPAS</p>
+        </div>
+    </div>
+
+    <script>
+        // Ambil hasil ujian
+        const hasil = JSON.parse(localStorage.getItem('hasil_ujian')) || {
+            nama: 'Siswa',
+            kelas: '5A',
+            nilai: 0,
+            totalNilai: 35,
+            persentase: 0,
+            waktuSelesai: new Date().toLocaleTimeString(),
+            jawabanDetail: [],
+            timeup: false
+        };
+        
+        // Hitung soal benar
+        const soalBenar = hasil.jawabanDetail.filter(j => 
+            j.status === 'benar' || j.status === 'setengah' || j.status === 'dijawab'
+        ).length;
+        
+        // Tampilkan data
+        document.getElementById('student-info').innerHTML = `
+            <h2>${hasil.nama}</h2>
+            <p>Kelas ${hasil.kelas}</p>
+            <p>${new Date().toLocaleDateString('id-ID', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            })}</p>
+        `;
+        
+        // Animasikan nilai
+        let nilaiTampil = 0;
+        const nilaiInterval = setInterval(() => {
+            nilaiTampil++;
+            document.getElementById('score-number').textContent = nilaiTampil;
+            
+            if (nilaiTampil >= hasil.nilai) {
+                clearInterval(nilaiInterval);
+                document.getElementById('score-number').textContent = hasil.nilai;
+            }
+        }, 50);
+        
+        // Update tampilan setelah 1 detik
+        setTimeout(() => {
+            document.getElementById('score-total').textContent = `/ ${hasil.totalNilai}`;
+            document.getElementById('persentase').textContent = `${hasil.persentase}%`;
+            document.getElementById('soal-benar').textContent = `${soalBenar}/35`;
+            document.getElementById('waktu-selesai').textContent = hasil.waktuSelesai;
+            document.getElementById('status-ujian').textContent = hasil.timeup ? 'WAKTU HABIS' : 'SELESAI';
+            document.getElementById('waktu-pengumpulan').textContent = hasil.waktuSelesai;
+            
+            // Set persentase untuk ring
+            document.getElementById('score-ring').style.setProperty('--percent', hasil.persentase);
+            
+            // Tentukan predikat
+            let predikat, warna, analisisHTML;
+            if (hasil.persentase >= 85) {
+                predikat = 'SANGAT MEMUASKAN 🎉';
+                warna = '#4CAF50';
+                analisisHTML = `
+                    <li>Luar biasa! Nilai kamu sangat baik</li>
+                    <li>Pemahaman materi sangat mantap</li>
+                    <li>Pertahankan semangat belajar!</li>
+                `;
+            } else if (hasil.persentase >= 70) {
+                predikat = 'MEMUASKAN 👍';
+                warna = '#8BC34A';
+                analisisHTML = `
+                    <li>Bagus! Hasil kamu memuaskan</li>
+                    <li>Pemahaman materi sudah baik</li>
+                    <li>Tingkatkan lagi untuk hasil terbaik</li>
+                `;
+            } else if (hasil.persentase >= 60) {
+                predikat = 'CUKUP 👌';
+                warna = '#FFC107';
+                analisisHTML = `
+                    <li>Cukup baik, bisa lebih maksimal</li>
+                    <li>Perlu belajar lebih giat lagi</li>
+                    <li>Review materi yang belum dikuasai</li>
+                `;
+            } else {
+                predikat = 'PERLU BELAJAR LAGI 📚';
+                warna = '#f44336';
+                analisisHTML = `
+                    <li>Jangan menyerah! Masih ada kesempatan</li>
+                    <li>Pelajari kembali materi yang sulit</li>
+                    <li>Minta bantuan guru untuk pemahaman</li>
+                `;
+            }
+            
+            document.getElementById('predikat').textContent = predikat;
+            document.getElementById('predikat').style.background = `linear-gradient(to right, ${warna}, ${warna}dd)`;
+            document.getElementById('score-ring').style.background = 
+                `conic-gradient(${warna} 0deg, ${warna} calc(${hasil.persentase} * 3.6deg), #e0e0e0 0deg)`;
+            document.getElementById('analisis-list').innerHTML = analisisHTML;
+        }, 1000);
+        
+        // Confetti animation
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'absolute';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-20px';
+            confetti.style.width = '15px';
+            confetti.style.height = '15px';
+            confetti.style.background = ['#FF5252', '#FF4081', '#E040FB', '#7C4DFF', '#536DFE', 
+                                       '#448AFF', '#40C4FF', '#18FFFF', '#64FFDA', '#69F0AE', 
+                                       '#B2FF59', '#EEFF41', '#FFFF00', '#FFD740', '#FFAB40'][Math.floor(Math.random() * 15)];
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            confetti.style.animation = `fall ${2 + Math.random() * 3}s linear forwards`;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fall {
+                    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+                    100% { transform: translateY(100vh) rotate(${360 + Math.random() * 360}deg); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.getElementById('confetti').appendChild(confetti);
+            setTimeout(() => confetti.remove(), 5000);
+        }
+        
+        // Create confetti
+        for(let i = 0; i < 50; i++) {
+            setTimeout(() => createConfetti(), i * 100);
+        }
+        
+        // Continue occasional confetti
+        setInterval(() => {
+            if(Math.random() > 0.7) createConfetti();
+        }, 500);
+        
+        // Fungsi tombol
+        function reviewJawaban() {
+            let reviewHTML = '<h2 style="color: #667eea; margin-bottom: 20px;">REVIEW JAWABAN</h2>';
+            
+            hasil.jawabanDetail.forEach((item, index) => {
+                reviewHTML += `
+                    <div style="background: ${item.status === 'benar' ? '#e8f5e9' : item.status === 'setengah' ? '#fff3e0' : '#ffebee'}; 
+                                padding: 15px; margin: 10px 0; border-radius: 10px; border-left: 4px solid ${
+                                    item.status === 'benar' ? '#4CAF50' : item.status === 'setengah' ? '#FF9800' : '#f44336'
+                                };">
+                        <strong>Soal ${index + 1} (${item.jenis.toUpperCase()}):</strong><br>
+                        ${item.soal}<br><br>
+                        <strong>Jawaban Anda:</strong> ${item.jawaban || '(Tidak diisi)'}<br>
+                        ${item.jenis === 'pg' || item.jenis === 'isian' ? `<strong>Kunci Jawaban:</strong> ${item.kunci}<br>` : ''}
+                        <strong>Status:</strong> ${item.status === 'benar' ? '✅ BENAR' : item.status === 'setengah' ? '⚠️ SETENGAH' : '❌ SALAH'} 
+                        (${item.poin} poin)
+                    </div>
+                `;
+            });
+            
+            reviewHTML += `<br><strong>Total Nilai: ${hasil.nilai}/${hasil.totalNilai} (${hasil.persentase}%)</strong>`;
+            
+            const reviewWindow = window.open('', 'Review Jawaban', 'width=800,height=600');
+            reviewWindow.document.write(`
+                <html>
+                <head>
+                    <title>Review Jawaban - ${hasil.nama}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        h2 { color: #667eea; }
+                        .correct { background: #e8f5e9; }
+                        .partial { background: #fff3e0; }
+                        .wrong { background: #ffebee; }
+                    </style>
+                </head>
+                <body>
+                    ${reviewHTML}
+                    <br><br>
+                    <button onclick="window.print()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        🖨️ Cetak Review
+                    </button>
+                </body>
+                </html>
+            `);
+        }
+        
+        function printHasil() {
+            window.print();
+        }
+        
+        function kembaliHome() {
+            // Hapus data ujian
+            localStorage.removeItem('hasil_ujian');
+            localStorage.removeItem('siswa_nama');
+            localStorage.removeItem('siswa_kelas');
+            localStorage.removeItem('waktu_mulai');
+            localStorage.removeItem('ujian_mulai');
+            
+            // Kembali ke home
+            window.location.href = 'index.html';
+        }
+        
+        // Auto scroll to top
+        window.scrollTo(0, 0);
+    </script>
+</body>
+</html>

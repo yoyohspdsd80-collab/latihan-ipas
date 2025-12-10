@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petunjuk Ujian - SDN Jasinga 02</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #667eea;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .header h2 {
+            color: #764ba2;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .student-info {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .info-item {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .petunjuk-box {
+            background: #f0f8ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+        
+        .petunjuk-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .petunjuk-box ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        
+        .petunjuk-box li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .komitmen-box {
+            background: #fff8e1;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px dashed #ff9800;
+            text-align: center;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            resize: vertical;
+        }
+        
+        .btn-start {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-start:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-start:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 PETUNJUK UJIAN IPAS</h1>
+            <h2>SDN JASINGA 02 - Kelas 5</h2>
+        </div>
+        
+        <div class="student-info" id="student-info">
+            <!-- Data siswa akan diisi -->
+        </div>
+        
+        <div class="info-grid">
+            <div class="info-item">⏰ 60 Menit</div>
+            <div class="info-item">📝 35 Soal</div>
+            <div class="info-item">🎯 3 Jenis Soal</div>
+            <div class="info-item">⭐ Waktu Terbatas</div>
+        </div>
+        
+        <div class="petunjuk-box">
+            <h3>📋 PETUNJUK PENGERJAAN</h3>
+            <ul>
+                <li><strong>Total 35 Soal:</strong> 20 Pilihan Ganda + 10 Isian + 5 Esai</li>
+                <li><strong>Waktu:</strong> 60 menit. Jika habis, ujian berakhir otomatis</li>
+                <li>Gunakan tombol <strong>"SEBELUMNYA"</strong> dan <strong>"BERIKUTNYA"</strong></li>
+                <li>Soal Pilihan Ganda: Pilih satu jawaban yang paling benar</li>
+                <li>Soal Isian: Gunakan <strong>HURUF KAPITAL</strong></li>
+                <li>Soal Esai: Jawab dengan jelas dan lengkap</li>
+                <li>Setiap soal disertai gambar ilustrasi</li>
+                <li>Jawaban disimpan otomatis</li>
+            </ul>
+        </div>
+        
+        <div class="komitmen-box">
+            <h3>🤝 PERNYATAAN KEJUJURAN</h3>
+            <p>Tulis kalimat berikut dengan <strong>HURUF KAPITAL</strong>:</p>
+            <textarea id="komitmen-text" rows="3" 
+                      placeholder="Ketik di sini..."
+                      oninput="this.value = this.value.toUpperCase()">
+SAYA MENGERJAKAN LATIHAN DENGAN JUJUR DAN SUNGGUH-SUNGGUH</textarea>
+            <p id="error-msg" style="color: red; display: none; margin-top: 10px;">
+                ❌ Anda harus mengetik kalimat dengan benar!
+            </p>
+        </div>
+        
+        <button id="start-btn" class="btn-start" onclick="startUjian()">
+            🚀 MULAI UJIAN SEKARANG
+        </button>
+    </div>
+
+    <script>
+        // Ambil data siswa
+        const nama = localStorage.getItem('siswa_nama') || 'Siswa';
+        const kelas = localStorage.getItem('siswa_kelas') || '5A';
+        
+        // Tampilkan data siswa
+        document.getElementById('student-info').innerHTML = `
+            <h3>👤 ${nama}</h3>
+            <p>🏫 Kelas ${kelas}</p>
+            <p>📅 ${new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+        `;
+        
+        // Validasi komitmen
+        const komitmenText = document.getElementById('komitmen-text');
+        const startBtn = document.getElementById('start-btn');
+        const errorMsg = document.getElementById('error-msg');
+        const requiredText = "SAYA MENGERJAKAN LATIHAN DENGAN JUJUR DAN SUNGGUH-SUNGGUH";
+        
+        // Set default text
+        komitmenText.value = requiredText;
+        
+        // Validasi input
+        function validateKomitmen() {
+            const currentText = komitmenText.value.trim();
+            
+            if (currentText === requiredText) {
+                startBtn.disabled = false;
+                errorMsg.style.display = 'none';
+                komitmenText.style.borderColor = '#4CAF50';
+                komitmenText.style.backgroundColor = '#f1f8e9';
+            } else {
+                startBtn.disabled = true;
+                errorMsg.style.display = 'block';
+                komitmenText.style.borderColor = '#f44336';
+                komitmenText.style.backgroundColor = '#ffebee';
+            }
+        }
+        
+        komitmenText.addEventListener('input', validateKomitmen);
+        
+        // Start ujian
+        function startUjian() {
+            if (komitmenText.value.trim() === requiredText) {
+                // Simpan waktu mulai
+                localStorage.setItem('ujian_mulai', new Date().toISOString());
+                
+                // Redirect ke halaman ujian
+                window.location.href = 'ujian.html';
+            } else {
+                alert('Harap ketik kalimat komitmen dengan benar!');
+                komitmenText.focus();
+            }
+        }
+        
+        // Validasi awal
+        validateKomitmen();
+        
+        // Fullscreen opsional (jika mau)
+        function suggestFullscreen() {
+            if (!document.fullscreenElement && confirm('Aktifkan fullscreen untuk pengalaman ujian yang lebih baik?')) {
+                document.documentElement.requestFullscreen();
+            }
+        }
+        
+        // Tampilkan saran fullscreen setelah 2 detik
+        setTimeout(suggestFullscreen, 2000);
+    </script>
+</body>
+</html>

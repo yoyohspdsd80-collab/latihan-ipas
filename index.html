@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Ujian IPAS - SDN Jasinga 02</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+            border: 5px solid #FFD700;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .school-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #FF9A00, #FF6B6B);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .school-header h1 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        .school-header h2 {
+            color: #764ba2;
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+        
+        .school-header h3 {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        
+        .btn-login {
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+        }
+        
+        .exam-info {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .exam-info h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .exam-info ul {
+            padding-left: 20px;
+            color: #555;
+        }
+        
+        .exam-info li {
+            margin-bottom: 5px;
+        }
+        
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="school-header">
+            <div class="school-logo">🏫</div>
+            <h1>SDN JASINGA 02</h1>
+            <h2>Ujian Akhir Semester</h2>
+            <h3>Ilmu Pengetahuan Alam dan Sosial (IPAS)</h3>
+        </div>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label>👤 NAMA SISWA</label>
+                <input type="text" id="nama" placeholder="Masukkan nama lengkap" required>
+            </div>
+            
+            <div class="form-group">
+                <label>🔒 PASSWORD</label>
+                <input type="password" id="password" value="1234" required>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    Password default: 1234
+                </small>
+            </div>
+            
+            <div class="form-group">
+                <label>👥 KELAS</label>
+                <select id="kelas" required>
+                    <option value="">Pilih Kelas</option>
+                    <option value="5A">Kelas 5A</option>
+                    <option value="5B">Kelas 5B</option>
+                    <option value="5C">Kelas 5C</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-login">
+                🚀 MASUK UJIAN
+            </button>
+        </form>
+        
+        <div class="exam-info">
+            <h4>📋 INFORMASI UJIAN:</h4>
+            <ul>
+                <li><strong>Waktu:</strong> 60 menit</li>
+                <li><strong>Jumlah Soal:</strong> 35 butir</li>
+                <li><strong>Materi:</strong> IPAS Kelas 5</li>
+                <li><strong>Password:</strong> 1234</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nama = document.getElementById('nama').value.trim();
+            const password = document.getElementById('password').value;
+            const kelas = document.getElementById('kelas').value;
+            
+            if (!nama) {
+                alert('Silakan masukkan nama Anda!');
+                return;
+            }
+            
+            if (password !== '1234') {
+                alert('Password salah! Gunakan: 1234');
+                return;
+            }
+            
+            if (!kelas) {
+                alert('Silakan pilih kelas!');
+                return;
+            }
+            
+            // Simpan data siswa
+            localStorage.setItem('siswa_nama', nama);
+            localStorage.setItem('siswa_kelas', kelas);
+            localStorage.setItem('waktu_mulai', new Date().toISOString());
+            
+            // Redirect ke petunjuk
+            window.location.href = 'petunjuk.html';
+        });
+        
+        // Enter key untuk login
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('login-form').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>

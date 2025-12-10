@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian IPAS - SDN Jasinga 02</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+        
+        .logo h1 {
+            color: #667eea;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            color: #764ba2;
+            font-size: 1rem;
+        }
+        
+        .timer {
+            background: linear-gradient(to right, #FF6B6B, #FF9A3C);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.4rem;
+            min-width: 120px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .student-info {
+            text-align: right;
+        }
+        
+        .student-info p {
+            margin-bottom: 3px;
+            color: #666;
+        }
+        
+        /* Progress */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #4CAF50, #8BC34A);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        /* Status Soal */
+        .soal-status {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .status-item {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        
+        .status-pg { background: #e3f2fd; color: #1976d2; }
+        .status-isian { background: #fff3e0; color: #f57c00; }
+        .status-esai { background: #e8f5e9; color: #388e3c; }
+        
+        .status-item.answered { background: #4CAF50; color: white; }
+        .status-item.current { border: 3px solid #667eea; transform: scale(1.1); }
+        
+        /* Soal Container */
+        .soal-container {
+            background: white;
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .soal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .soal-number {
+            background: #667eea;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .soal-kategori {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .soal-text {
+            font-size: 1.3rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        
+        .soal-image {
+            max-width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            margin: 20px 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        /* Pilihan Ganda */
+        .pilihan-container {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .pilihan-item {
+            padding: 18px 20px;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: #f9f9f9;
+        }
+        
+        .pilihan-item:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateX(10px);
+        }
+        
+        .pilihan-item.selected {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+            transform: translateX(10px);
+        }
+        
+        .pilihan-label {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #666;
+            flex-shrink: 0;
+        }
+        
+        .selected .pilihan-label {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        /* Input Jawaban */
+        .jawaban-container {
+            margin-top: 25px;
+        }
+        
+        .jawaban-input {
+            width: 100%;
+            padding: 18px;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .isian-input {
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+            font-size: 1.2rem;
+        }
+        
+        .jawaban-input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .nav-btn {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+            min-width: 180px;
+        }
+        
+        .btn-prev {
+            background: linear-gradient(to right, #6c757d, #495057);
+            color: white;
+        }
+        
+        .btn-next {
+            background: linear-gradient(to right, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .btn-finish {
+            background: linear-gradient(to right, #4CAF50, #2E7D32);
+            color: white;
+            padding: 18px 40px;
+            font-size: 1.2rem;
+        }
+        
+        .nav-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .student-info {
+                text-align: center;
+            }
+            
+            .timer {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .soal-status {
+                padding: 10px;
+            }
+            
+            .status-item {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+            
+            .soal-container {
+                padding: 20px;
+            }
+            
+            .soal-text {
+                font-size: 1.1rem;
+            }
+            
+            .pilihan-item {
+                padding: 15px;
+                gap: 10px;
+            }
+            
+            .pilihan-label {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .soal-text {
+                font-size: 1rem;
+            }
+            
+            .jawaban-input {
+                padding: 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <h1>✏️ UJIAN IPAS SDN JASINGA 02</h1>
+            <p>Ilmu Pengetahuan Alam dan Sosial - Kelas 5</p>
+        </div>
+        
+        <div class="timer" id="timer">60:00</div>
+        
+        <div class="student-info">
+            <p id="student-name">👤 Nama Siswa</p>
+            <p id="student-class">🏫 Kelas 5A</p>
+        </div>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-info">
+            <span id="progress-text">Soal 1/35</span>
+            <span id="timer-text">Waktu tersisa: 60:00</span>
+        </div>
+    </div>
+    
+    <!-- Status Soal -->
+    <div class="soal-status" id="soal-status">
+        <!-- Status akan diisi JavaScript -->
+    </div>
+    
+    <!-- Soal Container -->
+    <div class="soal-container">
+        <div class="soal-header">
+            <div class="soal-number" id="soal-number">SOAL 1/35</div>
+            <div class="soal-kategori" id="soal-kategori">PILIHAN GANDA</div>
+        </div>
+        
+        <div class="soal-text" id="soal-text">
+            <!-- Soal akan diisi JavaScript -->
+        </div>
+        
+        <div class="soal-image" id="soal-image">
+            <!-- Gambar akan diisi JavaScript -->
+        </div>
+        
+        <div class="pilihan-container" id="pilihan-container">
+            <!-- Pilihan untuk PG akan diisi JavaScript -->
+        </div>
+        
+        <div class="jawaban-container" id="jawaban-container">
+            <!-- Input untuk Isian/Esai akan diisi JavaScript -->
+        </div>
+    </div>
+    
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn btn-prev" onclick="prevSoal()" id="btn-prev">
+            ← SEBELUMNYA
+        </button>
+        
+        <div style="display: flex; gap: 15px;">
+            <button class="nav-btn btn-finish" onclick="finishUjian()" id="btn-finish" style="display: none;">
+                ✅ SELESAI UJIAN
+            </button>
+        </div>
+        
+        <button class="nav-btn btn-next" onclick="nextSoal()" id="btn-next">
+            BERIKUTNYA →
+        </button>
+    </div>
+
+    <!-- Data Soal (35 SOAL: 20 PG + 10 Isian + 5 Esai) -->
+    <script>
+        // Data Siswa
+        const namaSiswa = localStorage.getItem('siswa_nama') || 'Siswa';
+        const kelasSiswa = localStorage.getItem('siswa_kelas') || '5A';
+        
+        // Data Soal (35 SOAL sesuai permintaan)
+        const semuaSoal = [
+            // 20 SOAL PILIHAN GANDA
+            {
+                id: 1, jenis: 'pg', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Bagaimana cara cahaya merambat?',
+                gambar: 'Ilustrasi cahaya merambat lurus',
+                pilihan: ['Berbelok-belok', 'Lurus', 'Berputar-putar', 'Naik turun'],
+                kunci: 'b'
+            },
+            {
+                id: 2, jenis: 'pg', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Peristiwa pelangi terjadi karena cahaya...',
+                gambar: 'Ilustrasi pelangi',
+                pilihan: ['Dipantulkan', 'Dibiaskan', 'Diserap', 'Diteruskan'],
+                kunci: 'b'
+            },
+            {
+                id: 3, jenis: 'pg', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Bayangan terbentuk karena sifat cahaya yang...',
+                gambar: 'Ilustrasi bayangan',
+                pilihan: ['Dibiaskan', 'Dipantulkan', 'Diserap', 'Merambat lurus'],
+                kunci: 'd'
+            },
+            {
+                id: 4, jenis: 'pg', kategori: 'Bunyi dan Alat Pendengaran',
+                soal: 'Bunyi dapat merambat melalui...',
+                gambar: 'Ilustrasi gelombang bunyi',
+                pilihan: ['Udara saja', 'Air saja', 'Benda padat saja', 'Udara, air, dan benda padat'],
+                kunci: 'd'
+            },
+            {
+                id: 5, jenis: 'pg', kategori: 'Bunyi dan Alat Pendengaran',
+                soal: 'Bagian telinga yang menangkap gelombang bunyi pertama kali adalah...',
+                gambar: 'Ilustrasi telinga',
+                pilihan: ['Gendang telinga', 'Daun telinga', 'Koklea', 'Saluran telinga'],
+                kunci: 'b'
+            },
+            {
+                id: 6, jenis: 'pg', kategori: 'Magnet dan Sifat-sifatnya',
+                soal: 'Dua kutub magnet yang sama akan...',
+                gambar: 'Ilustrasi magnet tolak menolak',
+                pilihan: ['Tarik-menarik', 'Tolak-menolak', 'Diam saja', 'Bergerak acak'],
+                kunci: 'b'
+            },
+            {
+                id: 7, jenis: 'pg', kategori: 'Magnet dan Sifat-sifatnya',
+                soal: 'Benda yang dapat ditarik magnet adalah...',
+                gambar: 'Ilustrasi magnet menarik besi',
+                pilihan: ['Kayu', 'Kaca', 'Besi', 'Plastik'],
+                kunci: 'c'
+            },
+            {
+                id: 8, jenis: 'pg', kategori: 'Struktur Lapisan Bumi',
+                soal: 'Lapisan bumi yang paling luar disebut...',
+                gambar: 'Ilustrasi lapisan bumi',
+                pilihan: ['Inti', 'Mantel', 'Kerak', 'Atmosfer'],
+                kunci: 'c'
+            },
+            {
+                id: 9, jenis: 'pg', kategori: 'Atmosfer dan Cuaca',
+                soal: 'Lapisan atmosfer yang paling dekat dengan bumi adalah...',
+                gambar: 'Ilustrasi lapisan atmosfer',
+                pilihan: ['Stratosfer', 'Troposfer', 'Mesosfer', 'Termosfer'],
+                kunci: 'b'
+            },
+            {
+                id: 10, jenis: 'pg', kategori: 'Ekosistem dan Rantai Makanan',
+                soal: 'Makhluk hidup yang membuat makanan sendiri disebut...',
+                gambar: 'Ilustrasi tumbuhan hijau',
+                pilihan: ['Konsumen', 'Produsen', 'Pengurai', 'Dekomposer'],
+                kunci: 'b'
+            },
+            {
+                id: 11, jenis: 'pg', kategori: 'Energi Listrik dan Rangkaian',
+                soal: 'Rangkaian listrik yang semua lampu tersusun berurutan disebut...',
+                gambar: 'Ilustrasi rangkaian seri',
+                pilihan: ['Rangkaian paralel', 'Rangkaian seri', 'Rangkaian campuran', 'Rangkaian terbuka'],
+                kunci: 'b'
+            },
+            {
+                id: 12, jenis: 'pg', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Alat yang menggunakan prinsip pembiasan cahaya adalah...',
+                gambar: 'Ilustrasi kaca pembesar',
+                pilihan: ['Cermin datar', 'Cermin cekung', 'Lup/kaca pembesar', 'Lampu senter'],
+                kunci: 'c'
+            },
+            {
+                id: 13, jenis: 'pg', kategori: 'Bunyi dan Alat Pendengaran',
+                soal: 'Getaran sumber bunyi menyebabkan terjadinya...',
+                gambar: 'Ilustrasi gelombang suara',
+                pilihan: ['Cahaya', 'Bunyi', 'Panas', 'Listrik'],
+                kunci: 'b'
+            },
+            {
+                id: 14, jenis: 'pg', kategori: 'Magnet dan Sifat-sifatnya',
+                soal: 'Kutub magnet yang selalu menunjuk ke utara bumi disebut kutub...',
+                gambar: 'Ilustrasi kompas',
+                pilihan: ['Selatan', 'Utara', 'Timur', 'Barat'],
+                kunci: 'b'
+            },
+            {
+                id: 15, jenis: 'pg', kategori: 'Struktur Lapisan Bumi',
+                soal: 'Kenampakan alam berupa daratan yang lebih tinggi dari sekitarnya disebut...',
+                gambar: 'Ilustrasi gunung',
+                pilihan: ['Dataran rendah', 'Dataran tinggi', 'Gunung', 'Lembah'],
+                kunci: 'c'
+            },
+            {
+                id: 16, jenis: 'pg', kategori: 'Atmosfer dan Cuaca',
+                soal: 'Cuaca dipengaruhi oleh panas dari...',
+                gambar: 'Ilustrasi matahari',
+                pilihan: ['Bulan', 'Matahari', 'Bintang', 'Angin'],
+                kunci: 'b'
+            },
+            {
+                id: 17, jenis: 'pg', kategori: 'Ekosistem dan Rantai Makanan',
+                soal: 'Hewan yang memakan tumbuhan disebut...',
+                gambar: 'Ilustrasi hewan herbivora',
+                pilihan: ['Karnivora', 'Herbivora', 'Omnivora', 'Predator'],
+                kunci: 'b'
+            },
+            {
+                id: 18, jenis: 'pg', kategori: 'Energi Listrik dan Rangkaian',
+                soal: 'Contoh perubahan energi listrik menjadi energi gerak adalah...',
+                gambar: 'Ilustrasi kipas angin',
+                pilihan: ['Lampu', 'Televisi', 'Kipas angin', 'Kompor listrik'],
+                kunci: 'c'
+            },
+            {
+                id: 19, jenis: 'pg', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Cermin yang digunakan untuk bercermin sehari-hari adalah...',
+                gambar: 'Ilustrasi cermin datar',
+                pilihan: ['Cermin cekung', 'Cermin cembung', 'Cermin datar', 'Cermin pembias'],
+                kunci: 'c'
+            },
+            {
+                id: 20, jenis: 'pg', kategori: 'Bunyi dan Alat Pendengaran',
+                soal: 'Bunyi tidak dapat merambat melalui...',
+                gambar: 'Ilustrasi ruang hampa',
+                pilihan: ['Udara', 'Air', 'Besi', 'Ruang hampa'],
+                kunci: 'd'
+            },
+            
+            // 10 SOAL ISIAN SINGKAT
+            {
+                id: 21, jenis: 'isian', kategori: 'Magnet dan Sifat-sifatnya',
+                soal: 'Dua kutub magnet yang berbeda akan saling...',
+                gambar: 'Ilustrasi magnet tarik menarik',
+                kunci: 'TARIK MENARIK'
+            },
+            {
+                id: 22, jenis: 'isian', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Cahaya yang mengenai cermin akan...',
+                gambar: 'Ilustrasi cahaya dipantulkan',
+                kunci: 'DIPANTULKAN'
+            },
+            {
+                id: 23, jenis: 'isian', kategori: 'Bunyi dan Alat Pendengaran',
+                soal: 'Bunyi dihasilkan oleh benda yang...',
+                gambar: 'Ilustrasi benda bergetar',
+                kunci: 'BERGETAR'
+            },
+            {
+                id: 24, jenis: 'isian', kategori: 'Struktur Lapisan Bumi',
+                soal: 'Lapisan bumi yang paling dalam disebut...',
+                gambar: 'Ilustrasi inti bumi',
+                kunci: 'INTI DALAM'
+            },
+            {
+                id: 25, jenis: 'isian', kategori: 'Atmosfer dan Cuaca',
+                soal: 'Lapisan atmosfer tempat terjadinya cuaca adalah...',
+                gambar: 'Ilustrasi lapisan troposfer',
+                kunci: 'TROPOSFER'
+            },
+            {
+                id: 26, jenis: 'isian', kategori: 'Ekosistem dan Rantai Makanan',
+                soal: 'Rantai makanan selalu dimulai dari...',
+                gambar: 'Ilustrasi produsen (tumbuhan)',
+                kunci: 'PRODUSEN'
+            },
+            {
+                id: 27, jenis: 'isian', kategori: 'Energi Listrik dan Rangkaian',
+                soal: 'Rangkaian listrik yang memiliki lebih dari satu jalur disebut rangkaian...',
+                gambar: 'Ilustrasi rangkaian paralel',
+                kunci: 'PARALEL'
+            },
+            {
+                id: 28, jenis: 'isian', kategori: 'Magnet dan Sifat-sifatnya',
+                soal: 'Logam yang dapat ditarik magnet adalah besi dan...',
+                gambar: 'Ilustrasi magnet dan logam',
+                kunci: 'BAJA'
+            },
+            {
+                id: 29, jenis: 'isian', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Cahaya matahari yang mengenai tetesan air hujan dapat membentuk...',
+                gambar: 'Ilustrasi pelangi',
+                kunci: 'PELANGI'
+            },
+            {
+                id: 30, jenis: 'isian', kategori: 'Bunyi dan Alat Pendengaran',
+                soal: 'Alat pendengaran manusia adalah...',
+                gambar: 'Ilustrasi telinga manusia',
+                kunci: 'TELINGA'
+            },
+            
+            // 5 SOAL ESAI
+            {
+                id: 31, jenis: 'esai', kategori: 'Ekosistem dan Rantai Makanan',
+                soal: 'Jelaskan apa yang dimaksud dengan rantai makanan dan berikan satu contoh!',
+                gambar: 'Ilustrasi rantai makanan',
+                kunci: 'Rantai makanan adalah perpindahan energi dari produsen ke konsumen. Contoh: padi → tikus → ular → elang.'
+            },
+            {
+                id: 32, jenis: 'esai', kategori: 'Energi Listrik dan Rangkaian',
+                soal: 'Sebutkan 3 contoh perubahan energi listrik dalam kehidupan sehari-hari!',
+                gambar: 'Ilustrasi perubahan energi listrik',
+                kunci: '1. Lampu: listrik → cahaya 2. Setrika: listrik → panas 3. Kipas angin: listrik → gerak'
+            },
+            {
+                id: 33, jenis: 'esai', kategori: 'Cahaya dan Sifat-sifatnya',
+                soal: 'Sebutkan 3 sifat cahaya dan berikan contohnya dalam kehidupan sehari-hari!',
+                gambar: 'Ilustrasi sifat-sifat cahaya',
+                kunci: '1. Merambat lurus (contoh: sinar senter) 2. Dapat dipantulkan (contoh: cermin) 3. Dapat dibiaskan (contoh: pensil dalam air terlihat bengkok)'
+            },
+            {
+                id: 34, jenis: 'esai', kategori: 'Struktur Lapisan Bumi',
+                soal: 'Sebutkan 4 lapisan bumi dari luar ke dalam!',
+                gambar: 'Ilustrasi struktur bumi',
+                kunci: '1. Kerak bumi (litosfer) 2. Mantel 3. Inti luar 4. Inti dalam'
+            },
+            {
+                id: 35, jenis: 'esai', kategori: 'Magnet dan Sifat-sifatnya',
+                soal: 'Jelaskan sifat-sifat magnet dan berikan contoh penggunaannya dalam kehidupan sehari-hari!',
+                gambar: 'Ilustrasi magnet dan kegunaannya',
+                kunci: 'Sifat magnet: 1. Memiliki dua kutub (utara dan selatan) 2. Kutub sejenis tolak menolak 3. Kutub berbeda tarik menarik. Contoh penggunaan: pintu kulkas, kompas, bel listrik.'
+            }
+        ];
+        
+        // Acak soal untuk setiap siswa
+        function acakSoal(arr) {
+            // Acak semua soal
+            const acak = [...arr];
+            for (let i = acak.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [acak[i], acak[j]] = [acak[j], acak[i]];
+            }
+            return acak;
+        }
+        
+        const soalAcak = acakSoal(semuaSoal);
+        const totalSoal = soalAcak.length; // 35 soal
+        
+        // Data jawaban siswa
+        let jawabanSiswa = Array(totalSoal).fill('');
+        let currentSoal = 0;
+        
+        // Timer (60 menit = 3600 detik)
+        let waktuTersisa = 60 * 60;
+        
+        // Update tampilan soal
+        function updateTampilan() {
+            const soal = soalAcak[currentSoal];
+            
+            // Update info siswa
+            document.getElementById('student-name').textContent = `👤 ${namaSiswa}`;
+            document.getElementById('student-class').textContent = `🏫 Kelas ${kelasSiswa}`;
+            
+            // Update nomor soal
+            document.getElementById('soal-number').textContent = `SOAL ${currentSoal + 1}/${totalSoal}`;
+            document.getElementById('soal-kategori').textContent = 
+                soal.jenis === 'pg' ? 'PILIHAN GANDA' : 
+                soal.jenis === 'isian' ? 'ISIAN SINGKAT' : 'ESAI';
+            
+            // Update progress
+            document.getElementById('progress-text').textContent = `Soal ${currentSoal + 1}/${totalSoal}`;
+            const progressPercent = ((currentSoal + 1) / totalSoal) * 100;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+            
+            // Update teks soal
+            document.getElementById('soal-text').textContent = soal.soal;
+            
+            // Update gambar
+            document.getElementById('soal-image').innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                    <div style="font-size: 4rem; margin-bottom: 10px;">📷</div>
+                    <div>${soal.gambar}</div>
+                    <div style="font-size: 0.9rem; margin-top: 10px; opacity: 0.8;">Ilustrasi untuk membantu pemahaman</div>
+                </div>
+            `;
+            
+            // Tampilkan sesuai jenis soal
+            if (soal.jenis === 'pg') {
+                // Tampilkan pilihan ganda
+                document.getElementById('pilihan-container').style.display = 'grid';
+                document.getElementById('jawaban-container').style.display = 'none';
+                
+                let pilihanHTML = '';
+                const hurufPilihan = ['a', 'b', 'c', 'd'];
+                
+                hurufPilihan.forEach((huruf, index) => {
+                    if (soal.pilihan && soal.pilihan[index]) {
+                        const isSelected = jawabanSiswa[currentSoal] === huruf;
+                        pilihanHTML += `
+                            <div class="pilihan-item ${isSelected ? 'selected' : ''}" 
+                                 onclick="selectJawaban('${huruf}')">
+                                <div class="pilihan-label">${huruf.toUpperCase()}</div>
+                                <div>${soal.pilihan[index]}</div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                document.getElementById('pilihan-container').innerHTML = pilihanHTML;
+                
+            } else {
+                // Tampilkan input untuk isian/esai
+                document.getElementById('pilihan-container').style.display = 'none';
+                document.getElementById('jawaban-container').style.display = 'block';
+                
+                const isEsai = soal.jenis === 'esai';
+                const placeholder = isEsai ? 
+                    'Jawablah dengan jelas dan lengkap. Gunakan kalimat yang baik!' : 
+                    'Ketik jawaban Anda di sini (gunakan HURUF KAPITAL)';
+                
+                const rows = isEsai ? 6 : 3;
+                const jawabanSekarang = jawabanSiswa[currentSoal] || '';
+                
+                document.getElementById('jawaban-container').innerHTML = `
+                    <textarea class="jawaban-input ${isEsai ? '' : 'isian-input'}" 
+                              id="input-jawaban" 
+                              rows="${rows}" 
+                              placeholder="${placeholder}"
+                              oninput="simpanJawaban()">${jawabanSekarang}</textarea>
+                `;
+                
+                // Auto-uppercase untuk isian
+                if (!isEsai) {
+                    const input = document.getElementById('input-jawaban');
+                    input.addEventListener('input', function() {
+                        this.value = this.value.toUpperCase();
+                    });
+                }
+            }
+            
+            // Update status soal
+            updateStatusSoal();
+            
+            // Update tombol navigasi
+            document.getElementById('btn-prev').disabled = currentSoal === 0;
+            document.getElementById('btn-next').disabled = currentSoal === totalSoal - 1;
+            
+            // Tampilkan tombol selesai di soal terakhir
+            document.getElementById('btn-finish').style.display = 
+                currentSoal === totalSoal - 1 ? 'block' : 'none';
+        }
+        
+        // Update status soal di bagian atas
+        function updateStatusSoal() {
+            let statusHTML = '';
+            
+            soalAcak.forEach((soal, index) => {
+                const isAnswered = jawabanSiswa[index] !== '';
+                const isCurrent = index === currentSoal;
+                const jenisClass = `status-${soal.jenis}`;
+                
+                statusHTML += `
+                    <div class="status-item ${jenisClass} ${isAnswered ? 'answered' : ''} ${isCurrent ? 'current' : ''}"
+                         onclick="goToSoal(${index})"
+                         title="Soal ${index + 1}: ${soal.kategori}">
+                        ${index + 1}
+                    </div>
+                `;
+            });
+            
+            document.getElementById('soal-status').innerHTML = statusHTML;
+        }
+        
+        // Fungsi pilih jawaban PG
+        function selectJawaban(huruf) {
+            jawabanSiswa[currentSoal] = huruf;
+            updateTampilan();
+            
+            // Auto save dan next setelah 1 detik
+            setTimeout(() => {
+                if (currentSoal < totalSoal - 1) {
+                    nextSoal();
+                }
+            }, 500);
+        }
+        
+        // Fungsi simpan jawaban isian/esai
+        function simpanJawaban() {
+            const input = document.getElementById('input-jawaban');
+            if (input) {
+                jawabanSiswa[currentSoal] = input.value;
+                updateStatusSoal();
+            }
+        }
+        
+        // Navigasi soal
+        function prevSoal() {
+            if (currentSoal > 0) {
+                // Simpan jawaban dulu jika isian/esai
+                if (soalAcak[currentSoal].jenis !== 'pg') {
+                    simpanJawaban();
+                }
+                
+                currentSoal--;
+                updateTampilan();
+            }
+        }
+        
+        function nextSoal() {
+            if (currentSoal < totalSoal - 1) {
+                // Simpan jawaban dulu jika isian/esai
+                if (soalAcak[currentSoal].jenis !== 'pg') {
+                    simpanJawaban();
+                }
+                
+                currentSoal++;
+                updateTampilan();
+            }
+        }
+        
+        function goToSoal(index) {
+            // Simpan jawaban dulu jika isian/esai
+            if (soalAcak[currentSoal].jenis !== 'pg') {
+                simpanJawaban();
+            }
+            
+            currentSoal = index;
+            updateTampilan();
+        }
+        
+        // Timer
+        function updateTimer() {
+            if (waktuTersisa <= 0) {
+                finishUjian(true); // timeup
+                return;
+            }
+            
+            waktuTersisa--;
+            
+            const menit = Math.floor(waktuTersisa / 60);
+            const detik = waktuTersisa % 60;
+            
+            const waktuStr = `${menit.toString().padStart(2, '0')}:${detik.toString().padStart(2, '0')}`;
+            
+            document.getElementById('timer').textContent = waktuStr;
+            document.getElementById('timer-text').textContent = `Waktu tersisa: ${waktuStr}`;
+            
+            // Ubah warna jika sisa waktu < 5 menit
+            if (waktuTersisa < 300) {
+                document.getElementById('timer').style.background = 
+                    'linear-gradient(to right, #f44336, #ff5722)';
+            }
+        }
+        
+        // Selesai ujian
+        function finishUjian(timeup = false) {
+            // Simpan jawaban terakhir
+            if (soalAcak[currentSoal].jenis !== 'pg') {
+                simpanJawaban();
+            }
+            
+            // Hitung nilai
+            let nilai = 0;
+            let totalNilai = 0;
+            let jawabanDetail = [];
+            
+            soalAcak.forEach((soal, index) => {
+                const jawaban = jawabanSiswa[index];
+                let poin = 0;
+                let status = 'salah';
+                
+                if (soal.jenis === 'pg') {
+                    totalNilai += 1;
+                    if (jawaban === soal.kunci) {
+                        nilai += 1;
+                        poin = 1;
+                        status = 'benar';
+                    }
+                } else if (soal.jenis === 'isian') {
+                    totalNilai += 2;
+                    if (jawaban.toUpperCase() === soal.kunci) {
+                        nilai += 2;
+                        poin = 2;
+                        status = 'benar';
+                    } else if (jawaban.trim() !== '') {
+                        nilai += 1; // Setengah poin jika diisi tapi salah
+                        poin = 1;
+                        status = 'setengah';
+                    }
+                } else { // esai
+                    totalNilai += 4;
+                    if (jawaban.trim() !== '') {
+                        nilai += 3; // 3 poin untuk esai yang diisi
+                        poin = 3;
+                        status = 'dijawab';
+                    }
+                }
+                
+                jawabanDetail.push({
+                    soal: soal.soal,
+                    jawaban: jawaban,
+                    kunci: soal.kunci,
+                    poin: poin,
+                    status: status,
+                    jenis: soal.jenis
+                });
+            });
+            
+            const persentase = Math.round((nilai / totalNilai) * 100);
+            
+            // Simpan hasil
+            const hasil = {
+                nama: namaSiswa,
+                kelas: kelasSiswa,
+                nilai: nilai,
+                totalNilai: totalNilai,
+                persentase: persentase,
+                waktuSelesai: new Date().toLocaleTimeString(),
+                jawabanDetail: jawabanDetail,
+                timeup: timeup
+            };
+            
+            localStorage.setItem('hasil_ujian', JSON.stringify(hasil));
+            
+            // Redirect ke hasil
+            window.location.href = 'hasil.html';
+        }
+        
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            updateTampilan();
+            
+            // Start timer
+            const timerInterval = setInterval(updateTimer, 1000);
+            
+            // Fullscreen opsional (bukan wajib)
+            const fullscreenBtn = document.createElement('button');
+            fullscreenBtn.innerHTML = '🔲 Fullscreen';
+            fullscreenBtn.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 10px 15px;
+                background: #667eea;
+                color: white;
+                border: none;
+                border-radius: 20px;
+                cursor: pointer;
+                z-index: 1000;
+                font-size: 0.9rem;
+            `;
+            fullscreenBtn.onclick = function() {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else {
+                    document.exitFullscreen();
+                }
+            };
+            document.body.appendChild(fullscreenBtn);
+            
+            // Prevent accidental exit
+            window.onbeforeunload = function(e) {
+                e.preventDefault();
+                e.returnValue = 'Apakah Anda yakin ingin meninggalkan halaman ujian? Jawaban Anda mungkin belum tersimpan.';
+            };
+        });
+    </script>
+</body>
+</html>
